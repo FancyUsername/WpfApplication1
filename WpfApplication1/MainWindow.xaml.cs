@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,8 +40,12 @@ namespace WpfApplication1
             var result2 =
                 from n in Enumerable.Range(0, 10000)
                  select new MyItem() { Age = random.Next(10, 100), Name = Guid.NewGuid().ToString() };
+            var stopwatch = new Stopwatch();
+            richTextBox.AppendText("Started..." + Environment.NewLine);
+            stopwatch.Start();
             new XmlSerializer(typeof(List<MyItem>)).Serialize(new FileStream("large_file.xml", FileMode.Create), result2.ToList());
-            result2.ForEach(r => richTextBox.AppendText(Environment.NewLine + r.ToString()));
+            stopwatch.Stop();
+            richTextBox.AppendText("Finished in " + stopwatch.Elapsed.Milliseconds + " ms" + Environment.NewLine);
         }
     }
     
